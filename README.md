@@ -28,10 +28,25 @@ These paths can be linked from a future BYD landing page.
 7. Verify anonymously that a requester can **INSERT** one event but cannot read any events or manager data. Verify the manager can sign in and change the request status from Requested → Tentatively scheduled → Confirmed, and view changes in Events and Calendar.
 8. Add CAPTCHA/Turnstile and rate limiting via a server-side submission endpoint **before distributing the link broadly**. The current anonymous insert API is intentionally an MVP bootstrap and has no bot protection yet.
 
+
+## Temporary management access: shared code (pilot only)
+
+The management frontend now asks for an access code instead of email/password. The code is **never embedded in the public repository**. The Supabase SQL Editor must be used to apply `supabase/shared-code-pilot.sql`, then privately set the code with:
+
+```sql
+update private.vc_pilot_access
+set code_hash = extensions.crypt('REPLACE_WITH_YOUR_CODE', extensions.gen_salt('bf'))
+where name = 'manager';
+```
+
+Replace the placeholder directly in your private SQL Editor; **never commit the code to GitHub or place it in config.js**. Until these database functions exist, the page cannot validate a code. There is no client-side security bypass. Code is held only in page memory (not localStorage); sign out or refresh to require reentry.
+
+**Important limitations:** Anyone holding the code can see personal contact and event information and change all event statuses. There is currently no per-person audit or server-side abuse throttling for guesses. Pilot use only: rotate the code regularly, do not broadly distribute it, and migrate to per-user authentication before public operational use. The previous individual-manager Supabase configuration remains in the database but is not used by the pilot login form.
+
 ## Data access and security
 
 - Public users do not sign in, can submit requests only (INSERT), and cannot SELECT/UPDATE/DELETE events.
-- Management users use Supabase Auth with email/password, then must exist in `manager_users`.
+- Pilot management uses a shared access code verified by restricted server-side PostgreSQL RPC functions. Individual Supabase Auth remains configured for future use.
 - Managers can SELECT and UPDATE events; Postgres logs status transitions in `event_history`.
 - Database trigger forces `Requested` and `Not started` on insert, preventing a public client from asserting approval.
 - Public calendar shows date eligibility (D+20) and **does not reveal event data**. A selectable date is not an automatic reservation.
