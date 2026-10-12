@@ -1,7 +1,6 @@
-// Supabase project URL and publishable / anon key are safe to expose in a browser.
-// NEVER put a service_role or secret API key here.
-// Replace the empty values only after applying supabase/schema.sql.
+// Public Supabase configuration. The publishable key is safe for browser use; RLS protects private data.
+// NEVER use a secret/service_role key in this file.
 window.VC_CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: ''
+  supabaseUrl: 'https://ndxirudvsauunxaxbkvc.supabase.co',
+  supabaseAnonKey: 'sb_publishable_zURy5Jvty_P-09XRaQyi4w_IlswomGy'
 };
