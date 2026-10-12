@@ -71,6 +71,17 @@ Replace the placeholder directly in your private SQL Editor; **never commit the 
 - The Supabase migration `request_setup_dates_and_notification_outbox` has been applied: new setup/dismantling fields and private email outbox plus separate manager-notification recipients.
 - **Emails are not being sent yet.** Requests create pending outbox records only. Add named manager email recipients, a verified Resend sending domain and a protected sender/worker (with retries) before claiming email delivery. Do not put API keys or email recipient lists in browser code.
 
+
+## October 12 — D+21 and management updates
+
+- Eligibility: the submission day plus **20 following calendar days** are blocked. The first selectable date is **D+21**, including database enforcement for new requests. Old D+20 records are preserved (constraint added `NOT VALID` intentionally).
+- Event spaces: `Plenária` and `Studio` are independent checkboxes. Request both to use both.
+- Dashboard: a rejected request count links to the event list with Rejected selected.
+- Rejecting now requires a rejection reason, stored in `event_requests.rejection_reason`. Existing rejected records without reasons are labeled as having no previously recorded reason, not retroactively fabricated.
+- Management save now displays confirmation after the backend returns success.
+- Improved Portuguese, English and Simplified Chinese manager status names, tables, calendar labels and detail headings. Event/customer input remains untranslated user-provided content.
+- Database change is recorded in `supabase/migrations/20261012_rejection_reason_d21.sql` and has already been applied to the project's Supabase database; do not re-run without reviewing it.
+
 ## Known limitations / next work
 
 - Supabase project and initial manager authentication must be set up by authorized account owner.
