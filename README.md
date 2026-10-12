@@ -60,6 +60,17 @@ Replace the placeholder directly in your private SQL Editor; **never commit the 
 - Admin dashboard, event list, calendar, space/time schedule, event details, internal notes and status changes.
 - Independent request status and operational status. Financial/budget features are intentionally out of scope.
 
+
+## Requester flow refinements (October 2026)
+
+- Public calendar defaults to the month containing the first eligible D+20 date and has a smaller, two-column layout with explanatory copy. Non-eligible days display faded red diagonal stripes.
+- Requester can request separate setup and dismantling dates; both are pending review, not reservations.
+- The space choices now include both `Plenária + Studio` and independent `Studio`.
+- Basic needs no longer present speakers, external guests, live streaming, transportation, or accessibility support as standalone options. AV outcome questions remain available conditionally.
+- Agency question is now "Você já tem uma agência de eventos?"; selecting No shows guidance about potential partner referrals.
+- The Supabase migration `request_setup_dates_and_notification_outbox` has been applied: new setup/dismantling fields and private email outbox plus separate manager-notification recipients.
+- **Emails are not being sent yet.** Requests create pending outbox records only. Add named manager email recipients, a verified Resend sending domain and a protected sender/worker (with retries) before claiming email delivery. Do not put API keys or email recipient lists in browser code.
+
 ## Known limitations / next work
 
 - Supabase project and initial manager authentication must be set up by authorized account owner.
