@@ -72,6 +72,8 @@ create or replace function public.guard_event_request()
 returns trigger language plpgsql set search_path = '' as $$
 begin
   if tg_op = 'INSERT' then
+    -- Prevent anonymous clients from forging the submission timestamp.
+    new.created_at := now();
     new.request_status := 'Requested';
     new.operational_status := 'Not started';
     new.manager_notes := null;
