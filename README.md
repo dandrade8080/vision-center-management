@@ -82,6 +82,16 @@ Replace the placeholder directly in your private SQL Editor; **never commit the 
 - Improved Portuguese, English and Simplified Chinese manager status names, tables, calendar labels and detail headings. Event/customer input remains untranslated user-provided content.
 - Database change is recorded in `supabase/migrations/20261012_rejection_reason_d21.sql` and has already been applied to the project's Supabase database; do not re-run without reviewing it.
 
+
+## Internal prebookings (Nov 2026)
+
+- Manager-only tab **Pré-reservas internas**: create and edit manual reservations independently of public requester submissions and D+21.
+- Enter event name, date, start/end time, one or more spaces, contact person, phone, email, company, notes, and optional setup/teardown dates.
+- Management calendar shows booking counts per date and the day-by-space schedule shows each contact's details. Public request calendar does not expose these contacts.
+- Booking statuses are Tentative, Confirmed or Cancelled. Client-side overlap warnings are advisory and do **not** guarantee exclusivity; operational confirmation is still required.
+- Database uses a distinct RLS-protected table and restricted code-verified RPCs. Migration: `supabase/migrations/20261110_internal_prebookings.sql`.
+- IMPORTANT: When this change was prepared, Supabase reported `COMING_UP` after requesting a restore from `INACTIVE`. Test real writes and admin login after it reports `ACTIVE_HEALTHY`. A GitHub commit alone is not proof of working production deployment.
+
 ## Known limitations / next work
 
 - Supabase project and initial manager authentication must be set up by authorized account owner.
