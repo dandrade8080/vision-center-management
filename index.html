@@ -131,7 +131,7 @@ async function submitBooking(ev){
  ev.preventDefault();const fd=new FormData(ev.currentTarget),sp=fd.getAll('spaces');
  if(!sp.length)return alert(bc('missing'));
  const date=fd.get('event_date'),start=fd.get('start_time'),end=fd.get('end_time');
- const conflict=[...dayRequests(date).map(e=>({name:e.event_name,spaces:e.space_ids,start:e.start_time,end:e.end_time})),...bookings.filter(b=>active(b)&&b.id!==bookingId&&b.event_date===date)].filter(e=>e.spaces?.some(s=>sp.includes(s))&&e.start<end&&e.end>start);
+ const conflict=[...dayRequests(date).map(e=>({name:e.event_name,spaces:e.space_ids,start:e.start_time,end:e.end_time})),...dayBookings(date).filter(b=>b.id!==bookingId).map(b=>({name:b.event_name,spaces:b.space_ids,start:b.event_date===date?b.start_time:'00:00',end:b.event_date===date?b.end_time:'23:59'}))].filter(e=>e.spaces?.some(s=>sp.includes(s))&&e.start<end&&e.end>start);
  if(conflict.length&&!confirm(bc('conflicts')+': '+conflict.map(e=>e.name).join(', ')+'. '+bc('confirmOverlap')))return;
  const payload={p_code:accessCode,p_booking_id:bookingId||null,p_event_name:fd.get('event_name'),p_date:date,p_start:start,p_end:end,p_spaces:sp,p_responsible:fd.get('responsible_name'),p_email:fd.get('responsible_email')||'',p_phone:fd.get('responsible_phone')||'',p_company:fd.get('company_unit')||'',p_notes:fd.get('notes')||'',p_status:fd.get('status'),p_setup:fd.get('setup_date')||null,p_teardown:fd.get('teardown_date')||null};
  const button=ev.currentTarget.querySelector('button[type="submit"]');button.disabled=true;
